@@ -1,6 +1,6 @@
 import Foundation
 
-protocol PeristentSingleton: Codable {
+public protocol PeristentSingleton: Codable {
     static var urlName: String {get}
     
     init()

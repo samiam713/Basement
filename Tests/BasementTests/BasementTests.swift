@@ -6,7 +6,7 @@ final class BasementTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(Basement().text, "Hello, World!")
+//        XCTAssertEqual(Basement().text, "Hello, World!")
     }
 
     static var allTests = [
