@@ -1,17 +1,22 @@
 import Foundation
 
-public protocol PeristentSingleton: Codable {
-    static var urlName: String {get}
-    
-    init()
-    
+// a protocol an object implements if it is loaded from filesystem at program launch time and saved at program termination time
+public protocol PersistentObject: Codable {
+    static var singleton: Self {get}
+    static var uniquePath: String {get}
+    static func loadNew() -> Self
 }
 
-extension PeristentSingleton {
-    public static var url: URL {fileSystem.documentsURL.appendingPathComponent(urlName,isDirectory: false).appendingPathExtension("json")}
+extension PersistentObject {
+    
+    public static func uniqueURL() -> URL {fileSystem.jsonURL(fromPath: uniquePath)}
+    
+    public func save() {
+        fileSystem.save(this: self, to: Self.uniqueURL())
+    }
     
     public static func load() -> Self {
-        return FileManager.default.fileExists(atPath: url.path) ? fileSystem.load(this: Self.self, from: url) : .init()
+        let url = uniqueURL()
+        return FileManager.default.fileExists(atPath: url.path) ? fileSystem.load(this: Self.self, from: url) : loadNew()
     }
-
 }
