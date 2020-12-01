@@ -11,6 +11,9 @@ extension Array where Element: Equatable {
     mutating func unsafeRemove(element: Element) {
         self.remove(at: self.firstIndex(of: element)!)
     }
+}
+
+extension Array {
     
     func attemptMap<T>(unsafe: (Element) -> T?) -> [T]? {
         var newArray = [T]()
