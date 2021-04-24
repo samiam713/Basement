@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Graph<T>: Sequence where T: Hashable {
+class DirectedGraph<T>: Sequence where T: Hashable {
     
     func makeIterator() -> Dictionary<T, Set<T>>.Iterator {data.makeIterator()}
     

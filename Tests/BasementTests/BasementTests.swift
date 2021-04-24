@@ -6,7 +6,13 @@ final class BasementTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-//        XCTAssertEqual(Basement().text, "Hello, World!")
+        let x = Neuron()
+        let y = Neuron()
+
+        // let network = NeuralNetwork()
+
+        // network.create(neuron: x)
+        XCTAssertEqual(x,x)
     }
 
     static var allTests = [

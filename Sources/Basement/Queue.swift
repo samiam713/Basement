@@ -34,7 +34,7 @@ class Queue<T> {
     where S.Element == T {
         self.init()
         for s in sequence {
-            putEnd(s)
+            putLast(s)
         }
     }
     
@@ -50,7 +50,13 @@ class Queue<T> {
         }
     }
     
-    func putEnd(_ element: T) {
+    func getAndRemoveFirst() -> T? {
+        let first = getFirst()
+        removeFirst()
+        return first
+    }
+    
+    func putLast(_ element: T) {
         count += 1
         let newLast = Node(next: nil, payload: element)
         if let last = self.last {
