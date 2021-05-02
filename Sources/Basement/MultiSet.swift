@@ -1,25 +1,21 @@
-//
-//  File.swift
-//  
-//
-//  Created by Samuel Donovan on 4/17/21.
-//
-
 import Foundation
 
-struct MultiSet<T: Hashable>: ExpressibleByDictionaryLiteral {
+struct MultiSet<T: Hashable>: ExpressibleByDictionaryLiteral, Hashable, CustomStringConvertible {
     typealias Key = T
     typealias Value = Int
     
+    /// key to positive number of occurences
     var d = [T:Int]()
+    
+    var description: String {d.description}
     
     init(dictionaryLiteral elements: (T, Int)...) {
         for (element,occurences) in elements {self[element] = occurences}
     }
     
-    mutating func insert(_ value: T) {
-        if let old = d[value] {d[value] = old + 1}
-        else {d[value] = 1}
+    mutating func insert(_ value: T, occurences: Int = 1) {
+        if let old = d[value] {d[value] = old + occurences}
+        else {d[value] = occurences}
     }
     
     mutating func remove(_ value: T) {
@@ -40,4 +36,8 @@ struct MultiSet<T: Hashable>: ExpressibleByDictionaryLiteral {
             else {d[value] = nil}
         }
     }
+}
+
+extension MultiSet: Sequence {
+    func makeIterator() -> Dictionary<T,Int>.Iterator {d.makeIterator()}
 }

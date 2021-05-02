@@ -25,3 +25,21 @@ extension Array {
         return newArray
     }
 }
+
+extension Sequence {
+    // Swift library already has this LOL
+    // min(by: (Element,Element) -> Bool) -> Element?
+    func findExtremum(useFirst: (Element,Element) -> Bool) -> Element? {
+        
+        var iterator = self.makeIterator()
+        guard var current = iterator.next() else {return nil}
+        
+        while let potential = iterator.next() {
+            if useFirst(potential,current) {
+                current = potential
+            }
+        }
+        
+        return current
+    }
+}
