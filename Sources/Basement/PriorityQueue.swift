@@ -19,8 +19,8 @@ class PriorityQueue<T> {
         }
     }
     
-    let orderPredicate: (T,T) -> Bool
     // (node,node.next) satisfies this
+    let orderPredicate: (T,T) -> Bool
     
     var head: Node?
     var tail: Node?
