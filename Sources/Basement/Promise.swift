@@ -39,7 +39,7 @@ class Promise<T> {
     
     /// called by asynchronous operator upon completing operation
     func fulfill(_ object: T) {
-        queue.async {
+        queue.sync {
             guard self.result.isNone() else {return}
             self.result = .some(object)
             for callback in self.callbacks {
@@ -55,13 +55,13 @@ class Promise<T> {
         var result: PromiseOptional = .none
         group.enter()
         
-        queue.async {
+        queue.sync {
             switch result {
             case .some(let object):
                 self.result = .some(object)
                 group.leave()
             case .none:
-                self.add() {(object: T) in
+                self.addUnsafe() {(object: T) in
                     result = .some(object)
                     group.leave()
                 }
@@ -76,15 +76,17 @@ class Promise<T> {
         }
     }
     
-    func add(callback: @escaping (T) -> ()) {
-        queue.async {
-            switch self.result {
-            case .some(let object):
-                callback(object)
-            case .none:
-                self.callbacks.append(callback)
-            }
+    private func addUnsafe(callback: @escaping (T) -> ()) {
+        switch self.result {
+        case .some(let object):
+            callback(object)
+        case .none:
+            self.callbacks.append(callback)
         }
+    }
+    
+    func add(callback: @escaping (T) -> ()) {
+        queue.sync {addUnsafe(callback: callback)}
     }
     
     func and<U>(other: Promise<U>) -> Promise<(T,U)> {
@@ -103,8 +105,8 @@ class Promise<T> {
     func or<U>(other: Promise<U>) -> Promise<OrPair<T,U>> {
         let promise = Promise<OrPair<T,U>>()
         let semaphore = DispatchSemaphore(value: 1)
-        
         var completed = false
+        
         add() {(object: T) in
             semaphore.wait()
             defer {semaphore.signal()}
